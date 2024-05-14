@@ -104,17 +104,19 @@ begin
       write(archivoMaestro, productoMaestro);
     end;
   end;
-
-  // Si quedan registros en el archivo maestro sin procesar, actualizar el último registro
-  if not eof(archivoMaestro) then
-  begin
-    read(archivoMaestro, productoMaestro);
-    seek(archivoMaestro, filepos(archivoMaestro) - 1);
-    write(archivoMaestro, productoMaestro);
+  //Para modificar el último producto en caso que también cumpla la condición.
+  if productoMaestro.codigoProducto = ventaDetalle.codigoProducto then
+    begin
+      // Actualizar el stock actual del producto en el archivo maestro
+      productoMaestro.stockActual := productoMaestro.stockActual - ventaDetalle.cantUnidadesVendidas;
+      // Volver al registro leído y escribir la actualización
+      seek(archivoMaestro, filepos(archivoMaestro) - 1);
+      write(archivoMaestro, productoMaestro);
   end;
 
   close(archivoMaestro); // Cerrar el archivo maestro
   close(archivoDetalle); // Cerrar el archivo detalle
+  
 end;
 
 procedure imprimirDetalle(var archivoDetalle: detalle);
