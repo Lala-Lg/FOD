@@ -153,28 +153,34 @@ begin
 end;
 
 //Para escribir en un txt hay que escribir campo por campo... F
-procedure escribirTxt(var archivoTxt: Text; p: producto);
-begin
-  writeln(archivoTxt, 'Codigo de Producto: ', p.codigoProducto);
-  writeln(archivoTxt, 'Nombre Comercial: ', p.nombreComercial);
-  writeln(archivoTxt, 'Precio de Venta: ', p.precioVenta:0:2);
-  writeln(archivoTxt, 'Stock Actual: ', p.stockActual);
-  writeln(archivoTxt, 'Stock Minimo: ', p.stockMinimo);
-  writeln(archivoTxt, '');
-end;
-
 procedure buscarProductos(var m: maestro; var archivoTxt: Text);
 var
   p: producto;
 begin
+  assign(archivoTxt, 'stock_minimo.txt');
+  rewrite(archivoTxt); // Abro el archivo de texto en modo escritura
   reset(m); //Abro el archivo maestro para buscar entre los productos.
   while not eof(m) do begin
     read(m, p);
-    if (p.stockActual < p.stockMinimo) then
-      escribirTxt(archivoTxt, p);
+    if (p.stockActual < p.stockMinimo) then begin
+      // Si el stock actual es menor que el stock mínimo, escribir en el archivo de texto
+      writeln(archivoTxt, 'Codigo de Producto: ', p.codigoProducto);
+      writeln(archivoTxt, 'Nombre Comercial: ', p.nombreComercial);
+      writeln(archivoTxt, 'Precio de Venta: ', p.precioVenta:0:2);
+      writeln(archivoTxt, 'Stock Actual: ', p.stockActual);
+      writeln(archivoTxt, 'Stock Minimo: ', p.stockMinimo);
+      writeln(archivoTxt, '');
+    end;
   end;
   close(m);
+  close(archivoTxt); // Cerrar el archivo de texto
 end;
+
+//Nota, importante: al menos Geany no va a ejecutar correctamente este código si lo divido por procesos.. como por ejemplo
+//yo había querido hacer los writeln dentro de un proceso llamador "escribir en txt" o algo así. También había separado el crear txt poniendo el
+//assign en otro proceso... Resultó en que no me escribía en el txt lo que le pedía. Opté por poner todo junto en "buscar producto" y funcionó.
+//Quizás en el parcial da igual separarlo por procesos si total no hay que ejecutarlo, es en papel.
+
 
 var m:maestro; d:detalle; archivoTxt:Text;
 begin
