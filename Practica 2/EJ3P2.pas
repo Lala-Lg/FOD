@@ -82,41 +82,43 @@ end;
 
 //Actualizar el archivo maestro con el archivo detalle.
 
+//PROBLEMA: NO ACTUALIZA EL ÚLTIMO PRODUCTO DEL MAESTRO.
 procedure actualizarMaestroConDetalle(var archivoMaestro: maestro; var archivoDetalle: detalle);
 var
   productoMaestro: producto;
   ventaDetalle: ventaDiaria;
+  codigoActual, total: integer;
 begin
   reset(archivoMaestro); // Abrir el archivo maestro en modo lectura
   reset(archivoDetalle); // Abrir el archivo detalle en modo lectura
-
-  while not eof(archivoMaestro) and not eof(archivoDetalle) do
-  begin
-    read(archivoMaestro, productoMaestro); // Leer un registro del archivo maestro
-    read(archivoDetalle, ventaDetalle); // Leer un registro del archivo detalle
-
-    if productoMaestro.codigoProducto = ventaDetalle.codigoProducto then
-    begin
-      // Actualizar el stock actual del producto en el archivo maestro
-      productoMaestro.stockActual := productoMaestro.stockActual - ventaDetalle.cantUnidadesVendidas;
-      // Volver al registro leído y escribir la actualización
-      seek(archivoMaestro, filepos(archivoMaestro) - 1);
-      write(archivoMaestro, productoMaestro);
-    end;
-  end;
-  //Para modificar el último producto en caso que también cumpla la condición.
-  if productoMaestro.codigoProducto = ventaDetalle.codigoProducto then
-    begin
-      // Actualizar el stock actual del producto en el archivo maestro
-      productoMaestro.stockActual := productoMaestro.stockActual - ventaDetalle.cantUnidadesVendidas;
-      // Volver al registro leído y escribir la actualización
-      seek(archivoMaestro, filepos(archivoMaestro) - 1);
-      write(archivoMaestro, productoMaestro);
-  end;
-
-  close(archivoMaestro); // Cerrar el archivo maestro
-  close(archivoDetalle); // Cerrar el archivo detalle
   
+  read(archivoDetalle, ventaDetalle);
+  read(archivoMaestro, productoMaestro); 
+  
+  while (not eof(archivoMaestro) and not eof(archivoDetalle)) do
+  begin
+    codigoActual := productoMaestro.codigoProducto;
+    total := 0;
+    
+    while (not eof(archivoDetalle) and (ventaDetalle.codigoProducto = codigoActual)) do
+    begin
+      total := total + ventaDetalle.cantUnidadesVendidas;
+      read(archivoDetalle, ventaDetalle); // Leer siguiente registro del detalle
+    end;
+    
+    if (codigoActual = productoMaestro.codigoProducto) then
+    begin
+      productoMaestro.stockActual := productoMaestro.stockActual - total;
+      seek(archivoMaestro, filepos(archivoMaestro) - 1); // Retroceder a la posición del registro leído
+      write(archivoMaestro, productoMaestro); // Escribir el registro actualizado
+    end;
+    
+    if (not eof(archivoMaestro)) then
+      read(archivoMaestro, productoMaestro); // Leer siguiente registro del maestro
+  end;
+  
+  close(archivoMaestro); // Cerrar el archivo maestro
+  close(archivoDetalle); // Cerrar el archivo detalle 
 end;
 
 procedure imprimirDetalle(var archivoDetalle: detalle);
@@ -186,6 +188,7 @@ end;
 //Quizás en el parcial da igual separarlo por procesos si total no hay que ejecutarlo, es en papel.
 
 
+//Me faltó el menu.
 var m:maestro; d:detalle; archivoTxt:Text;
 begin
 
