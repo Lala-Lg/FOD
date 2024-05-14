@@ -89,6 +89,7 @@ var
 begin
   reset(archivoMaestro); // Abrir el archivo maestro en modo lectura
   reset(archivoDetalle); // Abrir el archivo detalle en modo lectura
+
   while not eof(archivoMaestro) and not eof(archivoDetalle) do
   begin
     read(archivoMaestro, productoMaestro); // Leer un registro del archivo maestro
@@ -103,6 +104,15 @@ begin
       write(archivoMaestro, productoMaestro);
     end;
   end;
+
+  // Si quedan registros en el archivo maestro sin procesar, actualizar el último registro
+  if not eof(archivoMaestro) then
+  begin
+    read(archivoMaestro, productoMaestro);
+    seek(archivoMaestro, filepos(archivoMaestro) - 1);
+    write(archivoMaestro, productoMaestro);
+  end;
+
   close(archivoMaestro); // Cerrar el archivo maestro
   close(archivoDetalle); // Cerrar el archivo detalle
 end;
@@ -143,23 +153,15 @@ begin
 end;
 
 //Listar en un archivo de texto llamado “stock_minimo.txt” aquellos productos cuyo stock actual esté por debajo del stock mínimo permitido.
-procedure crearTxt(var archivoTxt: Text);
-var
-  nombre: string;
-begin
-  nombre := 'stock_minimo.txt';
-  assign(archivoTxt, nombre);
-  rewrite(archivoTxt);
-end;
 
 //Para escribir en un txt hay que escribir campo por campo... F
 procedure buscarProductos(var m: maestro; var archivoTxt: Text);
 var
   p: producto;
 begin
+  reset(m); //Abro el archivo maestro para buscar entre los productos.
   assign(archivoTxt, 'stock_minimo.txt');
   rewrite(archivoTxt); // Abro el archivo de texto en modo escritura
-  reset(m); //Abro el archivo maestro para buscar entre los productos.
   while not eof(m) do begin
     read(m, p);
     if (p.stockActual < p.stockMinimo) then begin
@@ -191,7 +193,6 @@ begin
   imprimirMaestro(m);
   actualizarMaestroConDetalle(m,d);
   imprimirMaestro(m);
-  crearTxt(archivoTxt);
   buscarProductos(m,archivoTxt);
   
 end.
