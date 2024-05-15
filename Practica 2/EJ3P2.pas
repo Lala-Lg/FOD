@@ -1,5 +1,7 @@
 program EJ3P2;
 
+const valorAlto = 9999;
+
 type
   producto = record
    codigoProducto: integer;
@@ -13,7 +15,6 @@ type
   codigoProducto:integer;
   cantUnidadesVendidas:integer;
   end;
-const valorAlto = 9999;
   
   maestro = file of producto;
   detalle = file of ventaDiaria;
@@ -85,7 +86,7 @@ end;
 procedure leerDetalle(var vD: ventaDiaria; var aD:detalle);
 begin
 if (not eof (aD)) then
-  read (aD, vD);
+  read (aD, vD)
 else
   vD.codigoProducto := valorAlto;
 end;
@@ -104,12 +105,12 @@ begin
   leerDetalle(ventaDetalle, archivoDetalle);
 
   while (ventaDetalle.codigoProducto <> valorAlto) do begin
-    codigoActual := ventaDetalle.codigoActual;
+    codigoActual := ventaDetalle.codigoProducto;
     total:=0;
 
     while((ventaDetalle.codigoProducto <> valorAlto) and (ventaDetalle.codigoProducto = codigoActual)) do begin
      total:= total + ventaDetalle.cantUnidadesVendidas;
-     leer(ventaDetalle, archivoDetalle);
+     leerDetalle(ventaDetalle, archivoDetalle);
       end;
 
     while (productoMaestro.codigoProducto <> codigoActual) do begin
@@ -118,7 +119,7 @@ begin
       end;
     //Si encontré en el maestro, actualizo
     productoMaestro.stockActual:=productoMaestro.stockActual - total;
-    seek(archvioMaestro, filepos(archivoMaestro)-1);
+    seek(archivoMaestro, filepos(archivoMaestro)-1);
     write(archivoMaestro, productoMaestro);
    end;
   
