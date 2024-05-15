@@ -16,7 +16,7 @@ type
   
   maestro = file of producto;
   detalle = file of ventaDiaria;
-  
+  //No es necesario leer, solo que lo hago para probar el programa más tarde. El enunciado dice que se da la información para el archivo ordenada por código.
   //Información sobre el producto que se almacene en la variable producto.
   procedure leerProducto (var p:producto);
   begin
