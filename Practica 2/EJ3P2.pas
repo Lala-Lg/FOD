@@ -13,6 +13,7 @@ type
   codigoProducto:integer;
   cantUnidadesVendidas:integer;
   end;
+const valorAlto = 9999;
   
   maestro = file of producto;
   detalle = file of ventaDiaria;
@@ -80,8 +81,14 @@ begin
   close(d);
 end;
 
-//Actualizar el archivo maestro con el archivo detalle.
-
+//Actualizar el archivo detalle. No hace falta EOF del maestro.
+procedure leerDetalle(var vD: ventaDiaria; var aD:detalle);
+begin
+if (not eof (aD)) then
+  read (aD, vD);
+else
+  vD.codigoProducto := valorAlto;
+end;
 //PROBLEMA: NO ACTUALIZA EL ÚLTIMO PRODUCTO DEL MAESTRO.
 procedure actualizarMaestroConDetalle(var archivoMaestro: maestro; var archivoDetalle: detalle);
 var
@@ -92,30 +99,28 @@ begin
   reset(archivoMaestro); // Abrir el archivo maestro en modo lectura
   reset(archivoDetalle); // Abrir el archivo detalle en modo lectura
   
-  read(archivoDetalle, ventaDetalle);
   read(archivoMaestro, productoMaestro); 
-  
-  while (not eof(archivoMaestro) and not eof(archivoDetalle)) do
-  begin
-    codigoActual := productoMaestro.codigoProducto;
-    total := 0;
-    
-    while (not eof(archivoDetalle) and (ventaDetalle.codigoProducto = codigoActual)) do
-    begin
-      total := total + ventaDetalle.cantUnidadesVendidas;
-      read(archivoDetalle, ventaDetalle); // Leer siguiente registro del detalle
-    end;
-    
-    if (codigoActual = productoMaestro.codigoProducto) then
-    begin
-      productoMaestro.stockActual := productoMaestro.stockActual - total;
-      seek(archivoMaestro, filepos(archivoMaestro) - 1); // Retroceder a la posición del registro leído
-      write(archivoMaestro, productoMaestro); // Escribir el registro actualizado
-    end;
-    
-    if (not eof(archivoMaestro)) then
-      read(archivoMaestro, productoMaestro); // Leer siguiente registro del maestro
-  end;
+  //Leer avisa cuando llego al final del detalle con valorAlto
+  leerDetalle(ventaDetalle, archivoDetalle);
+
+  while (ventaDetalle.codigoProducto <> valorAlto) do begin
+    codigoActual := ventaDetalle.codigoActual;
+    total:=0;
+
+    while((ventaDetalle.codigoProducto <> valorAlto) and (ventaDetalle.codigoProducto = codigoActual)) do begin
+     total:= total + ventaDetalle.cantUnidadesVendidas;
+     leer(ventaDetalle, archivoDetalle);
+      end;
+
+    while (productoMaestro.codigoProducto <> codigoActual) do begin
+      //avanzo en el maestro hasta encontrar el producto que quiero actualizar
+      read(archivoMaestro,productoMaestro);
+      end;
+    //Si encontré en el maestro, actualizo
+    productoMaestro.stockActual:=productoMaestro.stockActual - total;
+    seek(archvioMaestro, filepos(archivoMaestro)-1);
+    write(archivoMaestro, productoMaestro);
+   end;
   
   close(archivoMaestro); // Cerrar el archivo maestro
   close(archivoDetalle); // Cerrar el archivo detalle 
