@@ -90,7 +90,6 @@ if (not eof (aD)) then
 else
   vD.codigoProducto := valorAlto;
 end;
-//PROBLEMA: NO ACTUALIZA EL ÚLTIMO PRODUCTO DEL MAESTRO.
 procedure actualizarMaestroConDetalle(var archivoMaestro: maestro; var archivoDetalle: detalle);
 var
   productoMaestro: producto;
