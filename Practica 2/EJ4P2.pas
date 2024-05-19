@@ -1,3 +1,12 @@
+{A partir de información sobre la alfabetización en la Argentina, se necesita actualizar un
+archivo que contiene los siguientes datos: nombre de provincia, cantidad de personas
+alfabetizadas y total de encuestados. Se reciben dos archivos detalle provenientes de dos
+agencias de censo diferentes, dichos archivos contienen: nombre de la provincia, código de
+localidad, cantidad de alfabetizados y cantidad de encuestados. Se pide realizar los módulos
+necesarios para actualizar el archivo maestro a partir de los dos archivos detalle.
+NOTA: Los archivos están ordenados por nombre de provincia y en los archivos detalle
+pueden venir 0, 1 ó más registros por cada provincia.
+}
 program EJ4P2;
 const valor_alto = 9999;
 type
@@ -14,39 +23,8 @@ type
    cantEncuestados:integer;
  end;
 
-maestro = file of datosProvincia;
+maestro = file of datosProvincia; //Se dispone de los archivos por orden de localidad
 detalle = file of datosLocalidad;
-
-//No es necesario crear el binario a partir de un archivo de texto. Lo que pasa es que como dice que se provee y que ya vienen ordenados en el enunciado... La idea es probarlo.
-procedure crearMaestro(var m: maestro; var archivoTxt:Text);
-var dProvincia: datosProvincia; nombre:string;
-begin
-  nombre := 'archivoMaestro';
-  assign (m,nombre);
-  rewrite (m);
-  reset (archivoTxt);
-  while (not eof (archivoTxt)) do begin
-    readln(archivoTxt, dProvincia.nombreProvincia, dProvincia.codigoLocalidad, dProvincia.cantAlfabetizados, dProvincia.totalEncuestados);
-    write(m,dProvincia);
-  end;
-  close (archivoTxt);
-  close (m);
-end;
-
-procedure crearDetalle(var d: detalle; var archivoTxt:Text);
-var dLocalidad: datosLocalidad; nombre:string;
-begin
-  nombre := 'archivoDetalle';
-  assign (d,nombre);
-  rewrite (d);
-  reset (archivoTxt);
-  while (not eof (archivoTxt)) do begin
-    readln(archivoTxt, dLocalidad.nombreProvincia, dLocalidad.codigoLocalidad, dLocalidad.cantAlfabetizados, dLocalidad.cantEncuestados);
-    write(d,dLocalidad);
-  end;
-  close (archivoTxt);
-  close (d);
-end;
 
 procedure leerDetalle (var archivo: detalle; var dato: datosLocalidad);
 begin
@@ -54,11 +32,17 @@ begin
   else dato.codigoLocalidad := valor_alto;
 end;
 
-procedure minimo (var det1, det2: detalle; var r1,r2,min: datosLocalidad);
+procedure minimo(var det1, det2: detalle; var r1, r2, min: datosLocalidad);
 begin
-  if(r1.codigoLocalidad <= r2.codigoLocalidad) then begin
-    min:= r1;
-    leerDetalle(det1,r1);
+  if (r1.codigoLocalidad <= r2.codigoLocalidad) then
+  begin
+    min := r1;
+    leerDetalle(det1, r1);
+  end
+  else
+  begin
+    min := r2;
+    leerDetalle(det2, r2);
   end;
 end;
 
@@ -103,30 +87,9 @@ begin
   close(det2);
 end;
  
-var d1,d2:detalle; m:maestro; archivoTxt:Text; nombre:string; 
+var d1,d2:detalle; m:maestro;
 
 begin
-
-    writeln('Ingrese el nombre del archivo maestro .txt');
-    readln(nombre);
-    assign(archivoTxt, nombre);
-    reset(archivoTxt);
-    crearMaestro(m, archivoTxt);
-    writeln('Archivo maestro creado correctamente.');
-
-    writeln('Ingrese el nombre del archivo detalle 1 .txt');
-    readln(nombre);
-    assign(archivoTxt, nombre);
-    reset(archivoTxt);
-    crearDetalle(d1, archivoTxt);
-    writeln('Archivo detalle 1 creado correctamente.');
-
-    writeln('Ingrese el nombre del archivo detalle 2 .txt');
-    readln(nombre);
-    assign(archivoTxt, nombre);
-    reset(archivoTxt);
-    crearDetalle(d2, archivoTxt);
-    writeln('Archivo detalle 2 creado correctamente.');
 
     actualizarMaestro(m, d1, d2);
 
