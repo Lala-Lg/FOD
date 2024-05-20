@@ -199,12 +199,14 @@ begin
   close(archivoMaestro);
 end;
 
-var m:maestro; d:detalle; 
+var m:maestro; d:detalle; mD:mergeDetalles; mR:mergeRegistro
 begin
 
   crearMaestro(m);
   crearDetalle(d);
   imprimirDetalle(d);
+  imprimirMaestro(m);
+  actualizaMaestro(m,mD,mR);
   imprimirMaestro(m);
   
 end.
