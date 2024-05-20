@@ -42,7 +42,7 @@ type
  
 //No es necesario leer, solo que lo hago para probar el programa más tarde. El enunciado dice que se da la información para el archivo ordenada por código.
   //Información sobre el producto que se almacene en la variable producto.
-  procedure leerProducto (var p:producto);
+  procedure ingresarProducto (var p:producto);
   begin
     with p do begin 
         writeln('Productos');
@@ -57,7 +57,7 @@ type
 		writeln ('');
 	end;
  end;
- procedure leerSucursal(var ventaDiaria:sucursal);
+ procedure ingresarSucursal(var ventaDiaria:sucursal);
  begin
    with ventaDiaria do begin
      writeln('Venta diaria en sucursal');
@@ -78,11 +78,11 @@ begin
   rewrite(m); //Creo el archivo binario maestro.
   reset(m);
   writeln('Para dejar de ingresar productos, ingresar codigo de producto -1');
-  leerProducto(p);
+  ingresarProducto(p);
   while (p.codigoProducto <> -1) do begin
     //Escribe el producto en el archivo binario maestro
     write(m, p);
-    leerProducto(p);
+    ingresarProducto(p);
   end;
   close(m); // Cierra el archivo binario maestro.
 end;
@@ -97,10 +97,10 @@ begin
   rewrite(d);
   reset(d);
   writeln('Para dejar de ingresar las ventas diarias, ingresar codigo de producto -1');
-  leerSucursal(ventaDiaria);
+  ingresarSucursal(ventaDiaria);
   while(ventaDiaria.codigoProducto <> -1) do begin
     write(d,ventaDiaria);
-    leerSucursal(ventaDiaria);
+    ingresarSucursal(ventaDiaria);
   end;
   close(d);
 end;
