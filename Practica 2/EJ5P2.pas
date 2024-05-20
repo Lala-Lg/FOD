@@ -146,10 +146,10 @@ begin
     leer (mD[i],mR[i]);
   end;
   minimo (mD,mR,min);
-  while(min.codigoProducto <>valorAlto) do begin
+  while (min.codigoProducto <>valorAlto) do begin
     codigoActual:=min.codigoProducto;
     totalVentasCodigo:=0;
-    while(min.codigoProducto = codigoActual) do begin
+    while ((min.codigoProducto <>valorAlto) and (min.codigoProducto = codigoActual)) do begin
       totalVentasCodigo:= totalVentasCodigo + min.cantidadVendida; //voy sumando las cantidades vendidas en todas las sucursales, por código de producto.
       minimo(mD,mR,min);
     end;
