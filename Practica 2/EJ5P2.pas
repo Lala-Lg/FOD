@@ -36,74 +36,8 @@ type
  maestro = file of producto;
  detalle = file of sucursal;
 
- mergeDetalles = array [1..n] of detalle;
- mergeRegistros = array [1..n] of sucursal;
- 
- 
-//No es necesario leer, solo que lo hago para probar el programa más tarde. El enunciado dice que se da la información para el archivo ordenada por código.
-  //Información sobre el producto que se almacene en la variable producto.
-  procedure ingresarProducto (var p:producto);
-  begin
-    with p do begin 
-        writeln('Productos');
-		write ('Ingrese codigo de producto: '); readln (codigoProducto);
-		if (codigoProducto <> -1) then begin
-			write ('Nombre comercial: '); readln (nombre);
-			write ('Descripcion: '); readln(descripcion);
-			write ('Stock disponible: '); readln (stockDisponible);
-			write ('Stock minimo: '); readln (stockMinimo);
-			write ('Precio de venta: '); readln (precioProducto);
-		end;
-		writeln ('');
-	end;
- end;
- procedure ingresarSucursal(var ventaDiaria:sucursal);
- begin
-   with ventaDiaria do begin
-     writeln('Venta diaria en sucursal');
-     write ('Ingrese codigo de producto: '); readln (codigoProducto);
-		if (codigoProducto <> -1) then begin
-       write('Cantidad de unidades vendidas hoy: '); read(cantidadVendida);
-     end;
-   end;
- end;
-
-procedure crearMaestro(var m: maestro);
-var
-  p: producto;
-  nombre: string;
-begin
-  nombre := 'archivoMaestro';
-  assign(m,nombre);
-  rewrite(m); //Creo el archivo binario maestro.
-  reset(m);
-  writeln('Para dejar de ingresar productos, ingresar codigo de producto -1');
-  ingresarProducto(p);
-  while (p.codigoProducto <> -1) do begin
-    //Escribe el producto en el archivo binario maestro
-    write(m, p);
-    ingresarProducto(p);
-  end;
-  close(m); // Cierra el archivo binario maestro.
-end;
-
-procedure crearDetalle(var d:detalle);
-var
-  ventaDiaria:sucursal;
-  nombre: string;
-begin
-  nombre := 'archivoDetalle';
-  assign(d,nombre);
-  rewrite(d);
-  reset(d);
-  writeln('Para dejar de ingresar las ventas diarias, ingresar codigo de producto -1');
-  ingresarSucursal(ventaDiaria);
-  while(ventaDiaria.codigoProducto <> -1) do begin
-    write(d,ventaDiaria);
-    ingresarSucursal(ventaDiaria);
-  end;
-  close(d);
-end;
+ vectorDetalles = array [1..n] of detalle;
+ vectorRegistros = array [1..n] of sucursal;
 
 //Si llegué al final del archivo detalle, le entro al codigo un valor muy alto para saber que estoy al final.
 procedure leer (var archivoDetalle:detalle; var dato:sucursal);
@@ -112,19 +46,19 @@ begin
   else dato.codigoProducto := valorAlto;
 end;
 
-procedure minimo (var mD:mergeDetalles; var mR:mergeRegistros; var min:sucursal);
+procedure minimo (var vD:vectorDetalles; var vR:vectorRegistros; var min:sucursal);
 var i, indiceMin:integer;
 begin
   indiceMin:= 0;
   min.codigoProducto:= valorAlto;
   for i:= 1 to N do begin
-    if (mR[i].codigoProducto <> valorAlto) then begin
-      if (mR[i].codigoProducto < min.codigoProducto) then begin
-        min:= mR[i];
+    if (vR[i].codigoProducto <> valorAlto) then begin
+      if (vR[i].codigoProducto < min.codigoProducto) then begin
+        min:= vR[i];
         indiceMin:= i;
       end;
     end;
-    if (indiceMin <> 0) then leer(mD[indiceMin], mR[indiceMin]);
+    if (indiceMin <> 0) then leer(vD[indiceMin], vR[indiceMin]);
   end;
 end;
 
@@ -146,10 +80,10 @@ begin
     leer (mD[i],mR[i]);
   end;
   minimo (mD,mR,min);
-  while (min.codigoProducto <>valorAlto) do begin
-    codigoActual:=min.codigoProducto;
+  while (min.codigoProducto <> valorAlto) do begin
+    codigoActual:= min.codigoProducto;
     totalVentasCodigo:=0;
-    while ((min.codigoProducto <>valorAlto) and (min.codigoProducto = codigoActual)) do begin
+    while ((min.codigoProducto <> valorAlto) and (min.codigoProducto = codigoActual)) do begin
       totalVentasCodigo:= totalVentasCodigo + min.cantidadVendida; //voy sumando las cantidades vendidas en todas las sucursales, por código de producto.
       minimo(mD,mR,min);
     end;
