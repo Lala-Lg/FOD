@@ -62,7 +62,7 @@ begin
   end;
 end;
 
-procedure actualizaMaestro(var archivoMaestro:maestro; var mD:mergeDetalles; var mR:mergeRegistros);
+procedure actualizaMaestro(var archivoMaestro:maestro; var vD:mergeDetalles; var vR:mergeRegistros);
 var
   min:sucursal;
   i:integer;
@@ -74,18 +74,17 @@ begin
   reset(archivoMaestro);
   for i:=1 to N do begin
     nombre:= 'Detalle' + 'i';
-    assign(mD[i], nombre); //Al archivo en la posición i le asigno el nombre.
-    rewrite(mD[i]); //Lo creo
-    reset (mD[i]);
-    leer (mD[i],mR[i]);
+    assign(vD[i], nombre); //Al archivo en la posición i le asigno el nombre.
+    reset (v[i]);
+    leer (vD[i],vR[i]);
   end;
-  minimo (mD,mR,min);
+  minimo (vD,vR,min);
   while (min.codigoProducto <> valorAlto) do begin
     codigoActual:= min.codigoProducto;
     totalVentasCodigo:=0;
     while ((min.codigoProducto <> valorAlto) and (min.codigoProducto = codigoActual)) do begin
       totalVentasCodigo:= totalVentasCodigo + min.cantidadVendida; //voy sumando las cantidades vendidas en todas las sucursales, por código de producto.
-      minimo(mD,mR,min);
+      minimo(vD,vR,min);
     end;
     read (archivoMaestro, p);
     while (p.codigoProducto <> codigoActual) do read (archivoMaestro,p);
@@ -93,11 +92,13 @@ begin
     p.stockDisponible := p.stockDisponible - totalVentasCodigo;
     write(archivoMaestro,p);
   end;
-  for i:=1 to N do close(mD[i]);
+  for i:=1 to N do close(vD[i]);
   close(archivoMaestro);
 end;
 
-var m:maestro; d:detalle; mD:mergeDetalles; mR:mergeRegistro
+var m:maestro; d:detalle; vD:mergeDetalles; vR:mergeRegistro; nombre:string;
 begin
-  actualizaMaestro(m,mD,mR);
+  nombre:='maestro';
+  assign(m, nombre);
+  actualizaMaestro(m,vD,vR);
 end.
