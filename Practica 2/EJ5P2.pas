@@ -97,42 +97,6 @@ begin
   close(archivoMaestro);
 end;
 
-procedure imprimirDetalle(var archivoDetalle: detalle);
-var
-  ventaDiaria:Sucursal;
-begin
-  reset(archivoDetalle);
-  writeln('--- Archivo Detalle ---');
-  while not eof(archivoDetalle) do
-  begin
-    read(archivoDetalle, ventaDiaria);
-    writeln('Codigo de Producto: ', ventaDiaria.codigoProducto);
-    writeln('Cantidad de Unidades Vendidas: ', ventaDiaria.cantidadVendida);
-    writeln('');
-  end;
-  close(archivoDetalle);
-end;
-
-procedure imprimirMaestro(var archivoMaestro: maestro);
-var
-  p: producto;
-begin
-  reset(archivoMaestro);
-  writeln('--- Archivo Maestro ---');
-  while not eof(archivoMaestro) do
-  begin
-    read(archivoMaestro, p);
-    writeln('Codigo de Producto: ', p.codigoProducto);
-    writeln('Nombre Comercial: ', p.nombre);
-    writeln('Descripcion del producto: ', p.descripcion);
-    writeln('Precio de Venta: ', p.precioProducto:0:2);
-    writeln('Stock Actual: ', p.stockDisponible);
-    writeln('Stock Minimo: ', p.stockMinimo);
-    writeln('');
-  end;
-  close(archivoMaestro);
-end;
-
 var m:maestro; d:detalle; mD:mergeDetalles; mR:mergeRegistro
 begin
   actualizaMaestro(m,mD,mR);
