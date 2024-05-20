@@ -9,10 +9,7 @@ vendida. Además, se deberá informar en un archivo de texto: nombre de producto
 descripción, stock disponible y precio de aquellos productos que tengan stock disponible por
 debajo del stock mínimo. Pensar alternativas sobre realizar el informe en el mismo
 procedimiento de actualización, o realizarlo en un procedimiento separado (analizar
-ventajas/desventajas en cada caso).
-
-Nota: todos los archivos se encuentran ordenados por código de productos. En cada detalle
-puede venir 0 o N registros de un determinado producto.}
+ventajas/desventajas en cada caso).}
 program EJ5P2;
 
 const valorAlto = 9999; N = 3; //son 30 sucursales y 30 archivos detalle, pruebo con 3;
@@ -62,7 +59,7 @@ begin
   end;
 end;
 
-procedure actualizaMaestro(var archivoMaestro:maestro; var vD:mergeDetalles; var vR:mergeRegistros);
+procedure actualizaMaestro(var archivoMaestro:maestro; var vD:vectorDetalles; var vR:vectorRegistros);
 var
   min:sucursal;
   i:integer;
@@ -75,7 +72,7 @@ begin
   for i:=1 to N do begin
     nombre:= 'Detalle' + 'i';
     assign(vD[i], nombre); //Al archivo en la posición i le asigno el nombre.
-    reset (v[i]);
+    reset (vD[i]);
     leer (vD[i],vR[i]);
   end;
   minimo (vD,vR,min);
@@ -96,7 +93,7 @@ begin
   close(archivoMaestro);
 end;
 
-var m:maestro; d:detalle; vD:mergeDetalles; vR:mergeRegistro; nombre:string;
+var m:maestro; vD:vectorDetalles; vR:vectorRegistros; nombre:string;
 begin
   nombre:='maestro';
   assign(m, nombre);
