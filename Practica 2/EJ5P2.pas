@@ -49,7 +49,7 @@ begin
   indiceMin:= 0;
   min.codigoProducto:= valorAlto;
   for i:= 1 to N do begin
-    if (vR[i].codigoProducto <> valorAlto) then begin
+    if (vR[i].codigoProducto <> valorAlto) then begin  //es innecesario
       if (vR[i].codigoProducto < min.codigoProducto) then begin
         min:= vR[i];
         indiceMin:= i;
@@ -70,8 +70,6 @@ var
 begin
   reset(archivoMaestro);
   for i:=1 to N do begin
-    nombre:= 'Detalle' + 'i';
-    assign(vD[i], nombre); //Al archivo en la posición i le asigno el nombre.
     reset (vD[i]);
     leer (vD[i],vR[i]);
   end;
@@ -79,7 +77,7 @@ begin
   while (min.codigoProducto <> valorAlto) do begin
     codigoActual:= min.codigoProducto;
     totalVentasCodigo:=0;
-    while ((min.codigoProducto <> valorAlto) and (min.codigoProducto = codigoActual)) do begin
+    while (min.codigoProducto = codigoActual) do begin
       totalVentasCodigo:= totalVentasCodigo + min.cantidadVendida; //voy sumando las cantidades vendidas en todas las sucursales, por código de producto.
       minimo(vD,vR,min);
     end;
