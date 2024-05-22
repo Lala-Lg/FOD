@@ -73,7 +73,7 @@ begin
   nombre := 'archivoMaestro';
   assign(m,nombre);
   rewrite(m); //Creo el archivo binario maestro.
-  reset(m);
+  reset(m); //no hace falta hacer un read después de un rewrite, porque rewrite crea y abre
   writeln('Para dejar de ingresar productos, ingresar codigo de producto -1');
   leerProducto(p);
   while (p.codigoProducto <> -1) do begin
@@ -92,7 +92,7 @@ begin
   nombre := 'archivoDetalle';
   assign(d,nombre);
   rewrite(d);
-  reset(d);
+  reset(d); //no hace falta reset después de rewrite porque rewrite ya abre el archivo después de crearlo
   writeln('Para dejar de ingresar las ventas diarias, ingresar codigo de producto -1');
   leerVentaDiaria(v);
   while(v.codigoProducto <> -1) do begin
@@ -127,7 +127,7 @@ begin
     codigoActual := ventaDetalle.codigoProducto;
     total:=0;
 
-    while((ventaDetalle.codigoProducto <> valorAlto) and (ventaDetalle.codigoProducto = codigoActual)) do begin
+    while (ventaDetalle.codigoProducto = codigoActual) do begin
      total:= total + ventaDetalle.cantUnidadesVendidas;
      leerDetalle(ventaDetalle, archivoDetalle);
       end;
@@ -181,7 +181,7 @@ begin
   close(archivoMaestro);
 end;
 
-//Listar en un archivo de texto llamado “stock_minimo.txt” aquellos productos cuyo stock actual esté por debajo del stock mínimo permitido.
+//Listar en un archivo dore texto llamado “stock_minimo.txt” aquellos productos cuyo stock actual esté p debajo del stock mínimo permitido.
 
 //Para escribir en un txt hay que escribir campo por campo... F
 procedure buscarProductos(var m: maestro; var archivoTxt: Text);
@@ -201,6 +201,7 @@ begin
       writeln(archivoTxt, 'Stock Actual: ', p.stockActual);
       writeln(archivoTxt, 'Stock Minimo: ', p.stockMinimo);
       writeln(archivoTxt, '');
+      writeln(archivoTxt, p.codigoProducto, p.precioVenta, p.stockActual, p.stockMinimo, p.nombreComercial);
     end;
   end;
   close(m);
