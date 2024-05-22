@@ -49,12 +49,10 @@ begin
   indiceMin:= 0;
   min.codigoProducto:= valorAlto;
   for i:= 1 to N do begin
-    if (vR[i].codigoProducto <> valorAlto) then begin  //es innecesario
       if (vR[i].codigoProducto < min.codigoProducto) then begin
         min:= vR[i];
         indiceMin:= i;
       end;
-    end;
     if (indiceMin <> 0) then leer(vD[indiceMin], vR[indiceMin]);
   end;
 end;
@@ -66,7 +64,6 @@ var
   p:producto;
   totalVentasCodigo:integer;
   codigoActual:integer;
-  nombre:string;
 begin
   reset(archivoMaestro);
   for i:=1 to N do begin
