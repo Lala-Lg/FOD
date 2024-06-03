@@ -68,8 +68,8 @@ end;
    rewrite(mNuevo);
    leerMaestro(m,p);
    while (p.codigo <> valorAlto) do begin
-   read(m,p);
-   if (p.stock > 0) then write (mNuevo,p);
+   if (p.stock >= 0) then write (mNuevo,p);
+   leerMaestro(m,p);
    end;
    close(m);
    close(mNuevo);
