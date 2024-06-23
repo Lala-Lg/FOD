@@ -94,3 +94,8 @@ type
    for i:=1 to n do close(vD[i]);
    close(archivoMaestro);
 end;
+var m:maestro; vD:vectorDetalles; vR:vectorRegistros;
+begin
+  assing (m, 'archivoMaestro.bin');
+  actualizarMaestro(m,vD,vR);
+end.
