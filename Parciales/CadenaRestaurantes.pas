@@ -1,3 +1,8 @@
+{Una cadena de restaurantes posee un archivo de productos que tiene a la venta, de cada producto se registra: código de producto, nombre,
+descripción, código de barras, categoría de producto, stock actual, stock mínimo.
+Diariamente el depósito debe efectuar envíos a los restaurantes que se encuentran en la ciudad. Para esto, cada uno envía un archivo por email de los pedidos.
+Cada pedido contiene: código de producto, cantidad pedida y una descripcion.
+Se pide realizar un proceso de actualización de archivo maestro con los TRES archivo detalle.}
 program parcialCadenaRestaurantes;
 Const n = 3; valorAlto = 999;
 type 
