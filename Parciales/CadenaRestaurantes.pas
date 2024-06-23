@@ -72,6 +72,7 @@ type
     while (min.codigoProducto <> valorAlto) do begin
       codigoActual:= min.codigoProducto;
       pedidoTotal:=0;
+      diferenciaStock:=0;
       while(min.codigoProducto = codigoActual)do begin
         pedidoTotal:=pedidoTotal + min.cantPedida;
         minimo(vD,vR,min);
