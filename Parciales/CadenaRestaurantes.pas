@@ -94,8 +94,14 @@ type
    for i:=1 to n do close(vD[i]);
    close(archivoMaestro);
 end;
-var m:maestro; vD:vectorDetalles; vR:vectorRegistros;
+var
+  m: maestro;
+  vD: vectorDetalles;
+  vR: vectorRegistros;
+  i: integer;
 begin
-  assing (m, 'archivoMaestro.bin');
-  actualizarMaestro(m,vD,vR);
+  assign(m, 'archivoMaestro.dat');
+  for i := 1 to n do
+    assign(vD[i], 'detalle' + IntToStr(i) + '.dat');
+  actualizarMaestro(m, vD, vR);
 end.
