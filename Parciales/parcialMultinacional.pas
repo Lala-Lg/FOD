@@ -1,3 +1,4 @@
+{Parcial del redictado de FOD 2023 25/08}
 program parcialMultinacional;
 const valorAlto = 999;
 type
