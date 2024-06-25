@@ -64,7 +64,9 @@ begin
   while regDetalle.codigoProducto <> valorAbsurdo do //Mientras no se termina el archivo detalle
   begin
     encontrado := false;
-    while not encontrado do //El end of file del maestro no lo pregunto porque si esta en el detalle esta en el maestro
+    //Si el maestro tuviera más de un producto con el mismo código para modificar o algo así lo haría hasta end of file. 
+    //Encontrar no es para no llegar al final porque de eso no me preocupo. Sino para cortar con el while una vez que lo encontré y lo modifiqué.
+    while not encontrado do
     begin
       reset(maestro);
       read(maestro, regMaestro);
@@ -90,6 +92,9 @@ begin
   assign(archivoMaestro, 'maestro.dat');
   assign(archivoDetalle, 'detalle.dat');
   
+  // Actualizar el archivo maestro con el archivo detalle
+  actualizarMaestro(archivoMaestro, archivoDetalle);
+end.
   // Actualizar el archivo maestro con el archivo detalle
   actualizarMaestro(archivoMaestro, archivoDetalle);
 end.
