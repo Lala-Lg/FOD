@@ -50,7 +50,7 @@ procedure minimo (var vD:detalles; var vS:sucursales; var min:venta);
 var i, indiceMin:integer;
 begin
   min.codigoProducto:=valorAlto;
-  for i:=2 to n do begin
+  for i:=1 to n do begin
     if(vS[i].codigoProducto < min.codigoProducto) then begin
       min:=vS[i];
       indiceMin:=i;
@@ -74,7 +74,6 @@ begin
   reset(archivoMaestro);
   for i:=1 to n do begin
     reset(vD[i]);
-    leer(vD[i], vS[i]);
     end;
   minimo(vD,vS,min);
   while(min.codigoProducto<>valorAlto) do begin
