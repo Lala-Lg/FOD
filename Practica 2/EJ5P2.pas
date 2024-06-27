@@ -53,7 +53,7 @@ begin
         min:= vR[i];
         indiceMin:= i;
       end;
-    if (indiceMin <> 0) then leer(vD[indiceMin], vR[indiceMin]);
+    if (indiceMin <> valorAlto) then leer(vD[indiceMin], vR[indiceMin]);
   end;
 end;
 
